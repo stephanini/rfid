@@ -1,0 +1,143 @@
+  /**
+   * Simple Read
+   * 
+   * Read data from the serial port and change the color of a rectangle
+   * when a switch connected to a Wiring or Arduino board is pressed and released.
+   * This example works with the Wiring / Arduino program that follows below.
+   */
+  import ddf.minim.*;
+  Minim minim;
+  AudioPlayer player1;
+  AudioPlayer player2;
+  AudioPlayer player3;
+  AudioPlayer player4;
+  AudioPlayer player5;
+  AudioInput input;
+  import processing.serial.*;
+  int inByte;
+  Serial myPort;  // Create object from Serial class
+  int val;      // Data received from the serial port
+   
+  void setup() 
+  {
+    size(200, 200);
+    // I know that the first port in the serial list on my mac
+    // is always my  FTDI adaptor, so I open Serial.list()[0].
+    // On Windows machines, this generally opens COM1.
+    // Open whatever port is the one you're using.
+    printArray(Serial.list());
+    String portName = Serial.list()[11];
+    myPort = new Serial(this, portName, 9600);
+    minim = new Minim(this);
+    player1 = minim.loadFile("track001.mp3");
+      player2 = minim.loadFile("track002.mp3");
+      player3 = minim.loadFile("track003.mp3");
+      player4 = minim.loadFile("track004.mp3");
+      player5 = minim.loadFile("track005.mp3");
+    input = minim.getLineIn();
+  }
+  
+  void draw()
+  {
+    if ( myPort.available() > 0) {  // If data is available,
+      inByte = myPort.read();         // read it and store it in val
+      println(inByte);
+    }
+    background(255);             // Set background to white
+    
+    if (inByte == 49) {              // If the serial value is 0,
+      fill(0);        // set fill to black
+  //   if (player1.play) {
+       player2.pause(); 
+      player3.pause();
+      player4.pause();
+      player5.pause();
+      player2.rewind();
+      player3.rewind();
+      player4.rewind();
+      player5.rewind();
+      player1.play();
+    } 
+    else if
+     (inByte == 50){               // If the serial value is 0,
+      fill(50);                   // set fill to black
+      player1.pause();
+      player3.pause();
+      player4.pause();
+      player5.pause();
+      player1.rewind();
+      player3.rewind();
+      player4.rewind();
+      player5.rewind();
+      player2.play();
+    } 
+    
+    else if (inByte == 51) {              // If the serial value is 0,
+      fill(100);                   // set fill to black
+    player1.pause();
+      player2.pause();
+      player4.pause();
+      player5.pause();
+      player1.rewind();
+      player2.rewind();
+      player4.rewind();
+      player5.rewind();
+      player3.play();
+    
+  } 
+    else if (inByte == 52) {              // If the serial value is 0,
+      fill(150); 
+   player1.pause();
+      player2.pause();
+      player3.pause();
+      player5.pause();
+      player1.rewind();
+      player2.rewind();
+      player3.rewind();
+      player5.rewind();
+      player4.play();    // set fill to black
+    } 
+    else if (inByte == 53) {              // If the serial value is 0,
+      fill(200);                   // set fill to black
+      player1.pause();
+      player2.pause();
+      player3.pause();
+      player4.pause();
+      player1.rewind();
+      player2.rewind();
+      player3.rewind();
+      player4.rewind();
+      player5.play(); 
+    } 
+    else {
+      fill(255);
+    }
+  
+    rect(50, 50, 100, 100);
+  }
+  
+  
+  
+  
+  /*
+  
+   // Wiring / Arduino Code
+   // Code for sensing a switch status and writing the value to the serial port.
+   
+   int switchPin = 4;                       // Switch connected to pin 4
+   
+   void setup() {
+   pinMode(switchPin, INPUT);             // Set pin 0 as an input
+   Serial.begin(9600);                    // Start serial communication at 9600 bps
+   }
+   
+   void loop() {
+   if (digitalRead(switchPin) == HIGH) {  // If switch is ON,
+   Serial.write(1);               // send 1 to Processing
+   } else {                               // If the switch is not ON,
+   Serial.write(0);               // send 0 to Processing
+   }
+   delay(100);                            // Wait 100 milliseconds
+   }
+   
+   */
